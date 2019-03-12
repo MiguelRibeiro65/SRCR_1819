@@ -11,7 +11,14 @@
 :- set_prolog_flag( single_var_warnings,off ).
 :- set_prolog_flag( unknown,fail ).
 
-%--------------------
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Permitir inserir na base de conhecimento
+
+:-dynamic utente/4.
+:-dynamic servico/4.
+:-dynamic consulta/4.
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Base de conhecimento
 
 %---- Caracterização de utente: idUt, Nome, Idade, Cidade -> {V,F}
@@ -85,29 +92,66 @@ consulta( 24_11_2016, 20, 10, 5 ).
 % Extensao do predicado registarUtente: idUt, Nome, Idade, Cidade -> {V,F} 
 
 registarUtente( ID, Nome, Idade, Cidade ) :- 
-	inserirConhecimento( utente( ID, Nome, Idade, Cidade ) ).
+	evolucao( utente( ID, Nome, Idade, Cidade ) ).
 
 
 % Extensao do predicado registarServiço: idServ, Descrição, Instituição, Cidade -> {V,F} 
 
 registarServico( ID, Descricao, Instituicao, Cidade ) :- 
-	inserirConhecimento( servico( ID, Descricao, Instituicao, Cidade ) ).
+	evolucao( servico( ID, Descricao, Instituicao, Cidade ) ).
 
 
 % Extensao do predicado registarConsulta: Data, IDUt, IDServ, Custo -> {V,F} 
 
 registarConsulta( Data, IDUt, IDServ, Custo ) :- 
-	inserirConhecimento( consulta( Data, IDUt, IDServ, Custo ) ).
+	evolucao( consulta( Data, IDUt, IDServ, Custo ) ).
 
 
 
-% Extensao do predicado inserirConhecimento: Conhecimento -> {V,F}
+% Extensao do predicado evolucao: Conhecimento -> {V,F}
 
-inserirConhecimento( Conhecimento ) :-
+evolucao( T ) :-
+	solucoes( I, +T::I, LI),
+	inserir( T ),
+	teste( LI ).
+
 	
+% Extensao do predicado solucoes
+
+solucoes()
+
+% Extensao do predicado comprimento
+
+comprimento( [],0 ).
+comprimento( [H|T], N ) :-
+	comprimento( T, X),
+	N is X+1.
+
+% Extensao do predicado construir
 	
+% Extensao do predicado teste: Termo -> {V,F}
+
+teste( [] ).
+teste( [I|L] ) :-
+	I,
+	teste( L ). 
+
+% Extensao do predicado inserir: Termo -> {V,F}
+
+inserir( T ) :-
+	assert( T ).
+inserir( T ) :-
+	retract( T), !, fail.
 
 
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%--------- Invariantes
+
+%-------------------- Não deixa inserir utentes com o mesmo id. 
+
++utente( ID,_,_,_ ) :: 	( solucoes( Ut,( ID, Ut ), S ),
+						comprimento( S,N ),
+						N == 1 ).
 
 
 
