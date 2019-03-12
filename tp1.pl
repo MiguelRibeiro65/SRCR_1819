@@ -10,6 +10,7 @@
 :- set_prolog_flag( discontiguous_warnings,off ).
 :- set_prolog_flag( single_var_warnings,off ).
 :- set_prolog_flag( unknown,fail ).
+:- op( 900,xfy,'::' ).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Permitir inserir na base de conhecimento
@@ -64,26 +65,26 @@ servico( 14, medicina_dentaria, hospital_egas_moniz, lisboa).
 
 %---- Caracterização de consulta : Data, idUt, idServ, Custo
 
-consulta( 01_02_2017, 1, 1, 40 ).
-consulta( 04_01_2016, 2, 3, 100 ).
-consulta( 14_03_2014, 3, 13, 20 ).
-consulta( 30_10_2015, 4, 5, 5 ).
-consulta( 29_02_2011, 5, 2, 15 ).
-consulta( 10_12_2012, 6, 4, 20 ).
-consulta( 11_11_2010, 7, 4, 25 ).
-consulta( 01_04_2019, 8, 1, 100 ).
-consulta( 19_05_2015, 9, 5, 1000 ).
-consulta( 01_07_2017, 10, 2, 23 ).
-consulta( 21_09_2016, 11, 14, 46 ).
-consulta( 18_10_2009, 12, 7, 200 ).
-consulta( 01_02_2007, 13, 13, 20 ).
-consulta( 17_12_2017, 14, 1, 30 ).
-consulta( 23_11_2019, 15, 6, 10 ).
-consulta( 16_10_2018, 16, 12, 15 ).
-consulta( 12_01_2016, 17, 8, 150 ).
-consulta( 19_03_2015, 18, 11, 55 ).
-consulta( 17_10_2014, 19, 9, 20 ).
-consulta( 24_11_2016, 20, 10, 5 ).
+consulta( "01_02_2017", 1, 1, 40 ).
+consulta( "04_01_2016", 2, 3, 100 ).
+consulta( "14_03_2014", 3, 13, 20 ).
+consulta( "30_10_2015", 4, 5, 5 ).
+consulta( "29_02_2011", 5, 2, 15 ).
+consulta( "10_12_2012", 6, 4, 20 ).
+consulta( "11_11_2010", 7, 4, 25 ).
+consulta( "01_04_2019", 8, 1, 100 ).
+consulta( "19_05_2015", 9, 5, 1000 ).
+consulta( "01_07_2017", 10, 2, 23 ).
+consulta( "21_09_2016", 11, 14, 46 ).
+consulta( "18_10_2009", 12, 7, 200 ).
+consulta( "01_02_2007", 13, 13, 20 ).
+consulta( "17_12_2017", 14, 1, 30 ).
+consulta( "23_11_2019", 15, 6, 10 ).
+consulta( "16_10_2018", 16, 12, 15 ).
+consulta( "12_01_2016", 17, 8, 150 ).
+consulta( "19_03_2015", 18, 11, 55 ).
+consulta( "17_10_2014", 19, 9, 20 ).
+consulta( "24_11_2016", 20, 10, 5 ).
 
 
 
@@ -111,14 +112,18 @@ registarConsulta( Data, IDUt, IDServ, Custo ) :-
 % Extensao do predicado evolucao: Conhecimento -> {V,F}
 
 evolucao( T ) :-
-	solucoes( I, +T::I, LI),
+	solucoes( I, T, LI),
 	inserir( T ),
 	teste( LI ).
 
 	
-% Extensao do predicado solucoes
+% Extensao do predicado solucoes: Formato, Questão, ListaSoluções -> {V,F}
 
-solucoes()
+solucoes( F, Q, LS ) :-
+	Q, 
+	assert( tmp(F) ), fail.
+solucoes( F, Q, LS ) :-
+	construir( [], LS ).
 
 % Extensao do predicado comprimento
 
@@ -127,7 +132,12 @@ comprimento( [H|T], N ) :-
 	comprimento( T, X),
 	N is X+1.
 
-% Extensao do predicado construir
+% Extensao do predicado construir: Lista, Soluções -> {V,F}
+
+construir( L, S ) :-
+	retract( tmp(X) ),
+	construir( [X|L], S ).
+construir( S, S ).
 	
 % Extensao do predicado teste: Termo -> {V,F}
 
@@ -152,6 +162,8 @@ inserir( T ) :-
 +utente( ID,_,_,_ ) :: 	( solucoes( Ut,( ID, Ut ), S ),
 						comprimento( S,N ),
 						N == 1 ).
+
+
 
 
 
