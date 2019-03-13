@@ -127,9 +127,10 @@ removerConsulta( Data, IDUt, IDServ, Custo) :-
 
 %-------------------------- 3 -------Identificar as instituições prestadoras de serviços-------------------------------------
 
-% Extensao do predicado instituicoeServicos: 
+% Extensao do predicado instituicoes: Serviço, ListaInstituicões -> {V,F} 
 
-
+instituicoesServicos( ListaInstituicoes ) :-
+	solucoes( Instituicao, servico( _, _, Instituicao, _ ), ListaInstituicoes).
 
 %------------------------------- 6 ---- Identificar os utentes de um serviço/instituição ------------------------------------
 % Extensoa do predicado utentesInstituicao : Instituicao, ListaUtentes -> {V,F}
