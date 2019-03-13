@@ -10,6 +10,7 @@
 :- set_prolog_flag( discontiguous_warnings,off ).
 :- set_prolog_flag( single_var_warnings,off ).
 :- set_prolog_flag( unknown,fail ).
+:- set_prolog_flag(toplevel_print_options, [quoted(true), portrayed(true), max_depth(0)]).
 :- op( 900,xfy,'::' ).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -55,7 +56,7 @@ servico( 5, psiquiatria, hospital_dr_francisco_zagalpo, ovar).
 servico( 6, urologia, hospital_sao_jose, fafe).
 servico( 7, consulta_geral, hospital_lisboa, lisboa).
 servico( 8, cirurgia_geral, hospital_sao_joao, porto).
-servico( 9, ginecologia, hospital_de_braga, braga).
+servico( 9, cardiologia, hospital_de_braga, braga).
 servico( 10, endocrinologia, hospital_sao_joao, porto).
 servico( 11, anestesiologia, hospital_vila_franca_de_xira, lisboa).
 servico( 12, cirurgia_plastica, hospital_distrital_figueira_foz, figueira_foz).
@@ -65,26 +66,26 @@ servico( 14, medicina_dentaria, hospital_egas_moniz, lisboa).
 
 %---- Caracterização de consulta : Data, idUt, idServ, Custo
 
-consulta( "01_02_2017", 1, 1, 40 ).
-consulta( "04_01_2016", 2, 3, 100 ).
-consulta( "14_03_2014", 3, 13, 20 ).
-consulta( "30_10_2015", 4, 5, 5 ).
-consulta( "29_02_2011", 5, 2, 15 ).
-consulta( "10_12_2012", 6, 4, 20 ).
-consulta( "11_11_2010", 7, 4, 25 ).
-consulta( "01_04_2019", 8, 1, 100 ).
-consulta( "19_05_2015", 9, 5, 1000 ).
-consulta( "01_07_2017", 10, 2, 23 ).
-consulta( "21_09_2016", 11, 14, 46 ).
-consulta( "18_10_2009", 12, 7, 200 ).
-consulta( "01_02_2007", 13, 13, 20 ).
-consulta( "17_12_2017", 14, 1, 30 ).
-consulta( "23_11_2019", 15, 6, 10 ).
-consulta( "16_10_2018", 16, 12, 15 ).
-consulta( "12_01_2016", 17, 8, 150 ).
-consulta( "19_03_2015", 18, 11, 55 ).
-consulta( "17_10_2014", 19, 9, 20 ).
-consulta( "24_11_2016", 20, 10, 5 ).
+consulta( '01_02_2017', 1, 1, 40 ).
+consulta( '04_01_2016', 2, 3, 100 ).
+consulta( '14_03_2014', 3, 13, 20 ).
+consulta( '30_10_2015', 4, 5, 5 ).
+consulta( '29_02_2011', 5, 2, 15 ).
+consulta( '10_12_2012', 6, 4, 20 ).
+consulta( '11_11_2010', 7, 4, 25 ).
+consulta( '01_04_2019', 8, 1, 100 ).
+consulta( '19_05_2015', 9, 5, 1000 ).
+consulta( '01_07_2017', 10, 2, 23 ).
+consulta( '21_09_2016', 11, 14, 46 ).
+consulta( '18_10_2009', 12, 7, 200 ).
+consulta( '01_02_2007', 13, 13, 20 ).
+consulta( '17_12_2017', 14, 1, 30 ).
+consulta( '23_11_2019', 15, 6, 10 ).
+consulta( '16_10_2018', 16, 12, 15 ).
+consulta( '12_01_2016', 17, 8, 150 ).
+consulta( '19_03_2015', 18, 11, 55 ).
+consulta( '17_10_2014', 19, 9, 20 ).
+consulta( '24_11_2016', 20, 10, 5 ).
 
 
 
@@ -107,62 +108,110 @@ registarServico( ID, Descricao, Instituicao, Cidade ) :-
 registarConsulta( Data, IDUt, IDServ, Custo ) :- 
 	evolucao( consulta( Data, IDUt, IDServ, Custo ) ).
 
+%----------------------------------- 2 ---- Remover utentes, serviços e consultas -------------------------------------------
+
+% Extensao do predicado removerUtente: idUt, Nome, Idade, Cidade -> {V,F}
+
+removerUtente( ID, Nome, Idade, Cidade) :-
+	involucao( utente( ID, Nome, Idade, Cidade ) ).
+
+% Extensao do predicado removerServico: idServ, Descricao, Instituicao, Cidade -> {V,F}
+
+removerServico( ID, Descricao, Instituicao, Cidade) :-
+	involucao( servico( ID, Descricao, Instituicao, Cidade ) ).
+
+% Extensao do predicado removerConsulta: Data, idUt, idServ, Custo -> {V,F}
+
+removerConsulta( Data, IDUt, IDServ, Custo) :-
+	involucao( consulta( Data, IDUt, IDServ, Custo ) ).
+
+%-------------------------- 3 -------Identificar as instituições prestadoras de serviços-------------------------------------
+
+% Extensao do predicado instituicoeServicos: 
 
 
-% Extensao do predicado evolucao: Conhecimento -> {V,F}
 
-evolucao( T ) :-
-	solucoes( I, T, LI),
-	inserir( T ),
-	teste( LI ).
+%------------------------------- 6 ---- Identificar os utentes de um serviço/instituição ------------------------------------
+% Extensoa do predicado utentesInstituicao : Instituicao, ListaUtentes -> {V,F}
 
-	
-% Extensao do predicado solucoes: Formato, Questão, ListaSoluções -> {V,F}
 
-solucoes( F, Q, LS ) :-
-	Q, 
-	assert( tmp(F) ), fail.
-solucoes( F, Q, LS ) :-
-	construir( [], LS ).
-
-% Extensao do predicado comprimento
-
-comprimento( [],0 ).
-comprimento( [H|T], N ) :-
-	comprimento( T, X),
-	N is X+1.
-
-% Extensao do predicado construir: Lista, Soluções -> {V,F}
-
-construir( L, S ) :-
-	retract( tmp(X) ),
-	construir( [X|L], S ).
-construir( S, S ).
-	
-% Extensao do predicado teste: Termo -> {V,F}
-
-teste( [] ).
-teste( [I|L] ) :-
-	I,
-	teste( L ). 
+%----------------------------------------------- Extensao de Meta-Predicados ------------------------------------------------ 
 
 % Extensao do predicado inserir: Termo -> {V,F}
 
 inserir( T ) :-
 	assert( T ).
 inserir( T ) :-
-	retract( T), !, fail.
+	retract( T ), !, fail.
 
+% Extensao do predicado remover: Termo -> {V,F}
 
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
-%--------- Invariantes
+remover( T ) :-
+	retract( T ).
+remover( T ) :-
+	assert( T ), !, fail.
+
+% Extensao do predicado solucoes: Formato, Questão, ListaSoluções -> {V,F}
+
+solucoes( Formato, Teorema, ListaSolucoes ) :-
+	findall( Formato, Teorema, ListaSolucoes ).	
+
+% Extensao do predicado teste: Termo -> {V,F}
+
+teste( [] ).
+teste( [I|L] ) :-
+	I,
+	teste( L ).
+
+% Extensao do predicado evolucao: Conhecimento -> {V,F}
+
+evolucao( T ) :-
+	solucoes( I, +T::I, LI ),
+	inserir( T ),
+	teste( LI ).
+
+% Extensao do predicado involucao: Conhecimento -> {V,F}
+
+involucao( T ) :-
+	solucoes( I, -T::I, LI ),
+	remover( T ),
+	teste( LI ).
+	
+
+% Extensao do predicado comprimento : ListaElementos, Resultado -> {V,F}
+
+comprimento( [],0 ).
+comprimento( [H|T], N ) :-
+	comprimento( T, X ),
+	N is X+1.
+
+% Extensao do predicado construir: ListaSoluções -> {V,F}
+
+% Extensao do predicado nao: Termo -> {V,F}
+
+nao( T ) :-
+	T, !, fail.
+nao( T ).
+
+%---------------------------------------------------- Invariantes ---------------------------------------------------------- 
 
 %-------------------- Não deixa inserir utentes com o mesmo id. 
 
-+utente( ID,_,_,_ ) :: 	( solucoes( Ut,( ID, Ut ), S ),
-						comprimento( S,N ),
-						N == 1 ).
++utente( IDU, _, _, _ ) :: ( solucoes( IDU, utente( IDU, _, _, _ ), S ),
+							comprimento( S,N ),
+							N == 1 ).
 
+%-------------------- Não deixa inserir serviços com o mesmo id. 
+
++servico( IDS, _, _, _ ) :: ( solucoes( IDS, servico( IDS, _, _, _ ), S ), 
+							comprimento( S, N),
+							N == 1 ).
+
+%-------------------- Não deixa inserir consultas iguais
+
++consulta( Data, IDU, IDS, Custo) :: ( solucoes( ( Data, IDU, IDS, Custo ), consulta( Data, IDU, IDS, Custo ), S),
+										comprimento( S, N),
+										N == 1 ).
 
 
 
