@@ -126,20 +126,9 @@ removerConsulta( Data, IDUt, IDServ, Custo) :-
 	involucao( consulta( Data, IDUt, IDServ, Custo ) ).
 
 
-
-%----------------------------------------------------------------------------------------------------------------------------
-%----------------------------------Listagem de Informação
-%----------------------------------------------------------------------------------------------------------------------------
-
-
 %-------------------------- 3 -------Identificar as instituições prestadoras de serviços-------------------------------------
 
-<<<<<<< HEAD
-% Extensao do predicado instituicoes: Serviço, ListaInstituicões -> {V,F} 
-=======
-% Extensao do predicado instituicoeServicos: 
-
-%-------------------------- 3a ------Identificar os utentes por critérios de seleção------------------------------------------
+%-------------------------------------- 3a ------Identificar os utentes por critérios de seleção-----------------------------
 
 % Extensao do predicado utenteID: ID, Resultado -> {V,F}
 utenteID(ID,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
@@ -153,7 +142,7 @@ utenteIdade(I,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
 % Extensao do predicado utenteCidade: Cidade, Resultado -> {V,F}
 utenteCidade(C,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
 
-%------------------------ 3b--------Identificar os serviços por critérios de seleção------------------------------------------
+%-------------------------------------- 3b --------Identificar os serviços por critérios de seleção--------------------------
 
 % Extensao do predicado servicoID: ID, Resultado -> {V,F}
 servicoID(ID,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
@@ -197,10 +186,6 @@ servicosData(DATA,R) :- solucoes((ID,D,I,C), (servico(ID,D,I,C), consulta(DATA,I
 % Extensao do predicado servicosCusto: Custo , Resultado -> {V,F}
 servicosCusto(CUSTO,R) :- 	solucoes((ID,D,I,C), (servico(ID,D,I,C), consulta(DATA,IDU,ID,CUSTO)), R),
 				eliminarRepetidos???????????????
-
-
-
->>>>>>> 76ab2f04a2eecc684863af9c292309beb96b30bf
 
 instituicoesServicos( ListaInstituicoes ) :-
 	solucoes( Instituicao, servico( _, _, Instituicao, _ ), ListaInstituicoes).
@@ -267,6 +252,21 @@ comprimento( [H|T], N ) :-
 nao( T ) :-
 	T, !, fail.
 nao( T ).
+
+% Extensao do predicado eliminarElemento: Elemento, ListaElementos, ListaResultado -> {V,F}
+
+eliminarElemento( _, [], [] ).
+eliminarElemento( E, [E|T1], T2 ) :- eliminarElemento(E, T1, T2 ).
+eliminarElemento( E, [H|T1], [H|T2] ) :-
+	E \== H,
+	eliminarElemento( E, T1, T2 ).
+
+% Extensao do predicado eliminarRepetidos: ListaElementos, ListaResultado -> {V,F}
+
+eliminarRepetidos( [], [] ).
+eliminarRepetidos( [H|T], [H|R] ) :-
+	eliminarElemento( H, T, T2 ),
+	eliminarRepetidos( T2, R ).
 
 %---------------------------------------------------- Invariantes ---------------------------------------------------------- 
 
