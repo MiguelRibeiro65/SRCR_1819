@@ -1,4 +1,4 @@
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+﻿	%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % SIST. REPR. CONHECIMENTO E RACIOCINIO - MiEI/3
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -26,7 +26,7 @@
 %---- Caracterização de utente: idUt, Nome, Idade, Cidade -> {V,F}
 
 utente( 1, anabela, 21, viana_do_castelo ).
-utente( 2, bernardo, 16, porto ).
+utente( 2, bernardo, 21, porto ).
 utente( 3, carlos, 80, braga ).
 utente( 4, daniela, 45, guimaraes ).
 utente( 5, erica, 37, setubal ).
@@ -125,9 +125,63 @@ removerServico( ID, Descricao, Instituicao, Cidade) :-
 removerConsulta( Data, IDUt, IDServ, Custo) :-
 	involucao( consulta( Data, IDUt, IDServ, Custo ) ).
 
+
+
+%----------------------------------------------------------------------------------------------------------------------------
+%----------------------------------Listagem de Informação
+%----------------------------------------------------------------------------------------------------------------------------
+
+
 %-------------------------- 3 -------Identificar as instituições prestadoras de serviços-------------------------------------
 
+<<<<<<< HEAD
 % Extensao do predicado instituicoes: Serviço, ListaInstituicões -> {V,F} 
+=======
+% Extensao do predicado instituicoeServicos: 
+
+%-------------------------- 3a ------Identificar os utentes por critérios de seleção------------------------------------------
+
+% Extensao do predicado utenteID: ID, Resultado -> {V,F}
+utenteID(ID,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
+
+% Extensao do predicado utenteNome: Nome, Resultado -> {V,F}
+utenteNome(N,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
+
+% Extensao do predicado utenteIdade: Idade, Resultado -> {V,F}
+utenteIdade(I,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
+
+% Extensao do predicado utenteCidade: Cidade, Resultado -> {V,F}
+utenteCidade(C,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
+
+%------------------------ 3b--------Identificar os serviços por critérios de seleção------------------------------------------
+
+% Extensao do predicado servicoID: ID, Resultado -> {V,F}
+servicoID(ID,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
+
+% Extensao do predicado servicoDescricao: Descricao, Resultado -> {V,F}
+servicoDescricao(D,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
+
+% Extensao do predicado servicoInstituicao: Instituicao, Resultado -> {V,F}
+servicoInstituicao(I,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
+
+% Extensao do predicado servicoCidade: Cidade, Resultado -> {V,F}
+servicoCidade(C,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
+
+%------------------------- 3c ------Identificar as consultas por critérios de seleção------------------------------------------
+
+% Extensao do predicado consultaData: Data , Resultado -> {V,F}
+consultaData(D,R) :- solucoes((D,IDU,IDS,C), consulta(D,IDU,IDS,C), R).
+
+% Extensao do predicado consultaIDUtente: IDUtente , Resultado -> {V,F}
+consultaIDUtente(IDU,R) :- solucoes((D,IDU,IDS,C), consulta(D,IDU,IDS,C), R).
+
+% Extensao do predicado consultaIDServico: IDServico , Resultado -> {V,F}
+consultaIDServico(IDS,R) :- solucoes((D,IDU,IDS,C), consulta(D,IDU,IDS,C), R).
+
+% Extensao do predicado consultaCusto: Custo , Resultado -> {V,F}
+consultaCusto(C,R) :- solucoes((D,IDU,IDS,C), consulta(D,IDU,IDS,C), R).
+
+>>>>>>> 76ab2f04a2eecc684863af9c292309beb96b30bf
 
 instituicoesServicos( ListaInstituicoes ) :-
 	solucoes( Instituicao, servico( _, _, Instituicao, _ ), ListaInstituicoes).
