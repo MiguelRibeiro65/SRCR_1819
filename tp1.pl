@@ -181,6 +181,25 @@ consultaIDServico(IDS,R) :- solucoes((D,IDU,IDS,C), consulta(D,IDU,IDS,C), R).
 % Extensao do predicado consultaCusto: Custo , Resultado -> {V,F}
 consultaCusto(C,R) :- solucoes((D,IDU,IDS,C), consulta(D,IDU,IDS,C), R).
 
+
+%--------------------------------5------Identificar serviços prestados por instituição/cidade/datas/custo--------------------
+
+% Extensao do predicado servicoInstituicao: Instituicao, Resultado -> {V,F}
+servicoInstituicao(I,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
+
+% Extensao do predicado servicoCidade: Cidade, Resultado -> {V,F}
+servicoCidade(C,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
+
+% Extensao do predicado servicosData: Data , Resultado -> {V,F}
+servicosData(DATA,R) :- solucoes((ID,D,I,C), (servico(ID,D,I,C), consulta(DATA,IDU,ID,CUSTO)), R),
+				eliminarRepetidos???????????????
+
+% Extensao do predicado servicosCusto: Custo , Resultado -> {V,F}
+servicosCusto(CUSTO,R) :- 	solucoes((ID,D,I,C), (servico(ID,D,I,C), consulta(DATA,IDU,ID,CUSTO)), R),
+				eliminarRepetidos???????????????
+
+
+
 >>>>>>> 76ab2f04a2eecc684863af9c292309beb96b30bf
 
 instituicoesServicos( ListaInstituicoes ) :-
