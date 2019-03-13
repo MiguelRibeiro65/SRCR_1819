@@ -174,8 +174,9 @@ evolucao( T ) :-
 
 involucao( T ) :-
 	solucoes( I, -T::I, LI ),
-	remover( T ),
-	teste( LI ).
+	teste( LI ),
+	remover( T ).
+	
 	
 
 % Extensao do predicado comprimento : ListaElementos, Resultado -> {V,F}
@@ -209,9 +210,44 @@ nao( T ).
 
 %-------------------- Não deixa inserir consultas iguais
 
-+consulta( Data, IDU, IDS, Custo) :: ( solucoes( ( Data, IDU, IDS, Custo ), consulta( Data, IDU, IDS, Custo ), S),
-										comprimento( S, N),
++consulta( Data, IDU, IDS, Custo ) :: ( solucoes( ( Data, IDU, IDS, Custo ), consulta( Data, IDU, IDS, Custo ), S),
+										comprimento( S, N ),
 										N == 1 ).
+
+%-------------------- Não deixa remover um utente que não existe
+
+-utente( IDU, Nome, Idade, Cidade ) :: ( solucoes( IDU, utente( IDU, _, _, _ ), S ),
+										comprimento( S, N ),
+										N == 1 ).
+
+%-------------------- Não deixa remover um utente com uma consulta associada a si
+
+-utente( IDU, _, _, _ ) :: ( solucoes( IDU, consulta( _, IDU, _, _ ), S),
+							comprimento( S, N ), 
+							N == 0 ).
+
+%-------------------- Não deixa remover um serviço que não existe
+
+-servico( IDS, Descricao, Instituicao, Cidade ) :: ( solucoes( IDS, servico( IDS, _, _, _ ), S ),
+										comprimento( S, N ),
+										N == 1 ).
+
+%-------------------- Não deixa remover um servico com uma consulta associada a si
+
+-servico( IDS, _, _, _ ) :: ( solucoes( IDS, consulta( _, _, IDS, _ ), S),
+							comprimento( S, N ), 
+							N == 0 ).
+
+%-------------------- Não deixa remover uma consulta que não exista
+
+-consulta( Data, IDU, IDS, Custo ) :: ( solucoes( ( Data, IDU, IDS, Custo ), consulta( Data, IDU, IDS, Custo ) , S ),
+										comprimento( S, N ),
+										N == 1 ).
+
+
+
+
+
 
 
 
