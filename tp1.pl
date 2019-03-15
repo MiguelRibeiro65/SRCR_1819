@@ -128,7 +128,10 @@ removerConsulta( Data, IDUt, IDServ, Custo) :-
 
 %-------------------------- 3 -------Identificar as instituições prestadoras de serviços-------------------------------------
 
-%-------------------------------------- 3a ------Identificar os utentes por critérios de seleção-----------------------------
+instServ(R) :- solucoes((Instituicao),servico( _, _, Instituicao, _ ),G),
+			eliminarRepetidos(G,R).
+
+%-------------------------------------- 4a ------Identificar os utentes por critérios de seleção-----------------------------
 
 % Extensao do predicado utenteID: ID, Resultado -> {V,F}
 utenteID(ID,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
@@ -142,7 +145,7 @@ utenteIdade(I,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
 % Extensao do predicado utenteCidade: Cidade, Resultado -> {V,F}
 utenteCidade(C,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
 
-%-------------------------------------- 3b --------Identificar os serviços por critérios de seleção--------------------------
+%-------------------------------------- 4b --------Identificar os serviços por critérios de seleção--------------------------
 
 % Extensao do predicado servicoID: ID, Resultado -> {V,F}
 servicoID(ID,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
@@ -156,7 +159,7 @@ servicoInstituicao(I,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
 % Extensao do predicado servicoCidade: Cidade, Resultado -> {V,F}
 servicoCidade(C,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
 
-%------------------------- 3c ------Identificar as consultas por critérios de seleção------------------------------------------
+%------------------------- 4c ------Identificar as consultas por critérios de seleção------------------------------------------
 
 % Extensao do predicado consultaData: Data , Resultado -> {V,F}
 consultaData(D,R) :- solucoes((D,IDU,IDS,C), consulta(D,IDU,IDS,C), R).
@@ -180,12 +183,12 @@ servicoInstituicao(I,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
 servicoCidade(C,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
 
 % Extensao do predicado servicosData: Data , Resultado -> {V,F}
-servicosData(DATA,R) :- solucoes((ID,D,I,C), (servico(ID,D,I,C), consulta(DATA,IDU,ID,CUSTO)), R),
-				eliminarRepetidos???????????????
+servicosData(DATA,R) :- solucoes((ID,D,I,C), (servico(ID,D,I,C), consulta(DATA,IDU,ID,CUSTO)), G),
+				eliminarRepetidos( G, R).
 
 % Extensao do predicado servicosCusto: Custo , Resultado -> {V,F}
-servicosCusto(CUSTO,R) :- 	solucoes((ID,D,I,C), (servico(ID,D,I,C), consulta(DATA,IDU,ID,CUSTO)), R),
-				eliminarRepetidos???????????????
+servicosCusto(CUSTO,R) :- 	solucoes(sevico(D,I), (consulta(DATA,IDU,ID,CUSTO), servico(ID,D,I,C)), G),
+				eliminarRepetidos( G, R).
 
 instituicoesServicos( ListaInstituicoes ) :-
 	solucoes( Instituicao, servico( _, _, Instituicao, _ ), ListaInstituicoes).
