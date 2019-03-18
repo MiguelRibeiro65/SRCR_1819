@@ -1,4 +1,4 @@
-﻿	%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+﻿%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % SIST. REPR. CONHECIMENTO E RACIOCINIO - MiEI/3
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -71,11 +71,11 @@ consulta( '04_01_2016', 2, 3, 100 ).
 consulta( '14_03_2014', 3, 13, 20 ).
 consulta( '30_10_2015', 4, 5, 5 ).
 consulta( '29_02_2011', 5, 2, 15 ).
-consulta( '10_12_2012', 6, 4, 20 ).
+consulta( '10_12_2012', 1, 4, 20 ).
 consulta( '11_11_2010', 7, 4, 25 ).
 consulta( '01_04_2019', 8, 1, 100 ).
 consulta( '19_05_2015', 9, 5, 1000 ).
-consulta( '01_07_2017', 10, 2, 23 ).
+consulta( '01_07_2017', 1, 2, 23 ).
 consulta( '21_09_2016', 11, 14, 46 ).
 consulta( '18_10_2009', 12, 7, 200 ).
 consulta( '01_02_2007', 13, 13, 20 ).
@@ -127,6 +127,7 @@ removerConsulta( Data, IDUt, IDServ, Custo) :-
 
 
 %-------------------------- 3 -------Identificar as instituições prestadoras de serviços-------------------------------------
+% Extensão do predicado instServ: Resposta -> {V,F}
 
 instServ(R) :- solucoes((Instituicao),servico( _, _, Instituicao, _ ),G),
 			eliminarRepetidos(G,R).
@@ -194,7 +195,34 @@ instituicoesServicos( ListaInstituicoes ) :-
 	solucoes( Instituicao, servico( _, _, Instituicao, _ ), ListaInstituicoes).
 
 %------------------------------- 6 ---- Identificar os utentes de um serviço/instituição ------------------------------------
-% Extensoa do predicado utentesInstituicao : Instituicao, ListaUtentes -> {V,F}
+% Extensao do predicado utentesInstituicao : Instituicao, ListaUtentes -> {V,F}
+
+
+%----------- 8 ---- Calcular o custo total dos cuidados de saúde por utente/serviço/instituição/data. -----------------------
+
+% Extensao do predicado custoUtente : Utente -> {V,F}
+
+custoUtente( IDU ) :- solucoes( Custo, consulta( _, IDU, _, Custo), R ),
+	somarLista( R, G ),
+	write('Custo do utente '),write(IDU),write(' é '),write(G),write('€'),nl.
+
+% Extensao do predicado custoServiço : Serviço -> {V,F}
+
+custoServico( IDS ) :- solucoes( Custo, consulta( _, _, IDS, Custo), R ),
+	somarLista( R, G ),
+	write('Custo total do servico '),write(IDS),write(' é '),write(G),write('€'),nl.
+
+% Extensao do predicado custoInstituicao : Instituição -> {V,F}
+
+custoInstituicao( Instituicao ) :- solucoes( Custo, (servico( IDS, _, Instituicao, _ ), consulta( _, _, IDS, Custo)), R ),
+	somarLista( R, G ),
+	write('Rendimento total da instituicao '),write(Instituicao),write(' é '),write(G),write('€'),nl.
+
+% Extensao do predicado custoData : Data -> {V,F}
+
+custoData( Data ) :- solucoes( Custo, consulta( Data, _, _, Custo), R ),
+	somarLista( R, G ),
+	write('Rendimento total na data '),write(Data),write(' é '),write(G),write('€'),nl.
 
 
 %----------------------------------------------- Extensao de Meta-Predicados ------------------------------------------------ 
@@ -270,6 +298,13 @@ eliminarRepetidos( [], [] ).
 eliminarRepetidos( [H|T], [H|R] ) :-
 	eliminarElemento( H, T, T2 ),
 	eliminarRepetidos( T2, R ).
+
+% Extensao do predicado somarLista : ListaElementos, Resultado -> {V,F}
+
+somarLista( [], 0 ).
+somarLista( [H|T], R ) :-
+	somarLista( T, N ),
+	R is H+N.
 
 %---------------------------------------------------- Invariantes ---------------------------------------------------------- 
 
