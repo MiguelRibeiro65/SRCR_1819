@@ -49,7 +49,7 @@ utente( 20, antonio, 63, povoa_de_varzim ).
 %---- Caracterização de serviço: idServ, Descrição, Instituição, Cidade -> {V,F}
 
 servico( 1, cardiologia, hospital_sao_joao, porto).
-servico( 2, neurologia, hospital_de_guimaraes, guimaraes).
+servico( 2, cardiologia, hospital_de_guimaraes, guimaraes).
 servico( 3, oncologia, ipo, porto).
 servico( 4, ortopedia, hospital_espirito_santo, evora).
 servico( 5, psiquiatria, hospital_dr_francisco_zagalpo, ovar).
@@ -197,6 +197,24 @@ instituicoesServicos( ListaInstituicoes ) :-
 %------------------------------- 6 ---- Identificar os utentes de um serviço/instituição ------------------------------------
 % Extensao do predicado utentesInstituicao : Instituicao, ListaUtentes -> {V,F}
 
+%-------------------- 7 ---- Identificar serviços realizados por utente/instituição/cidade; ---------------------------------
+
+% Extensao do predicado servicosUtente : IDUtente, Resposta -> {V,F}
+
+servicosUtente( IDU, R ) :- solucoes( Servico,(consulta( _, IDU, IDS, _), servico(IDS, Servico, _, _ ) ) , LR ),
+	eliminarRepetidos( LR, R ).
+
+% Extensao do predicado servicosInstituicao : Instituicao, Resposta -> {V,F}
+
+servicosInstituicao( Instituicao, R ) :- solucoes( Servico, servico( _, Servico, Instituicao, _ ), LR ),
+	eliminarRepetidos( LR, R ).
+
+% Extensao do predicado servicosCidade : Cidade , Resposta -> {V,F}
+
+servicosCidade( Cidade, R ) :- solucoes( Servico, servico( _, Servico, _, Cidade ), LR ),
+	eliminarRepetidos( LR, R ).
+
+	
 
 %----------- 8 ---- Calcular o custo total dos cuidados de saúde por utente/serviço/instituição/data. -----------------------
 
@@ -223,7 +241,6 @@ custoInstituicao( Instituicao ) :- solucoes( Custo, (servico( IDS, _, Instituica
 custoData( Data ) :- solucoes( Custo, consulta( Data, _, _, Custo), R ),
 	somarLista( R, G ),
 	write('Rendimento total na data '),write(Data),write(' é '),write(G),write('€'),nl.
-
 
 %----------------------------------------------- Extensao de Meta-Predicados ------------------------------------------------ 
 
