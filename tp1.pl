@@ -177,22 +177,21 @@ consultaCusto(C,R) :- solucoes((D,IDU,IDS,C), consulta(D,IDU,IDS,C), R).
 
 %--------------------------------5------Identificar consultas prestadas por instituição/cidade/datas/custo--------------------
 
-% Extensao do predicado servicoInstituicao: Instituicao, Resultado -> {V,F}
-servicoInstituicao(I,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
+% Extensao do predicado consultasInstituicao: Instituicao, Resposta -> {V,F}
 
-% Extensao do predicado servicoCidade: Cidade, Resultado -> {V,F}
-servicoCidade(C,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
+consultasInstituicao( Instituicao, R ) :- solucoes( ( Data, IDU, IDS, Custo ), ( servico( IDS, _, Instituicao, _ ), consulta( Data, IDU, IDS, Custo ) ), R ).
 
-% Extensao do predicado servicosData: Data , Resultado -> {V,F}
-servicosData(DATA,R) :- solucoes((ID,D,I,C), (servico(ID,D,I,C), consulta(DATA,IDU,ID,CUSTO)), G),
-				eliminarRepetidos( G, R).
+% Extensao do predicado consultasCidade: Cidade, Resposta -> {V,F}
 
-% Extensao do predicado servicosCusto: Custo , Resultado -> {V,F}
-servicosCusto(CUSTO,R) :- 	solucoes(sevico(D,I), (consulta(DATA,IDU,ID,CUSTO), servico(ID,D,I,C)), G),
-				eliminarRepetidos( G, R).
+consultasCidade( Cidade , R ) :- solucoes( ( Data, IDU, IDS, Custo ), ( servico( IDS, _, _, Cidade ), consulta( Data, IDU, IDS, Custo ) ), R ).
 
-instituicoesServicos( ListaInstituicoes ) :-
-	solucoes( Instituicao, servico( _, _, Instituicao, _ ), ListaInstituicoes).
+% Extensao do predicado consultasDatas :- Data, Resposta -> {V,F}
+
+consultasData( Data, R ) :- solucoes( (Data, IDU, IDS, Custo ), consulta( Data, IDU, IDS, Custo ) , R ).
+
+% Extensao do predicado consultasCusto: Custo, Resposta -> {V,F}
+
+consultasCusto( Custo, R ) :- solucoes( (Data, IDU, IDS, Custo ), consulta( Data, IDU, IDS, Custo ), R ).
 
 %------------------------------- 6 ---- Identificar os utentes de um serviço/instituição ------------------------------------
 
