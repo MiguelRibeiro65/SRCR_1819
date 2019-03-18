@@ -175,7 +175,7 @@ consultaIDServico(IDS,R) :- solucoes((D,IDU,IDS,C), consulta(D,IDU,IDS,C), R).
 consultaCusto(C,R) :- solucoes((D,IDU,IDS,C), consulta(D,IDU,IDS,C), R).
 
 
-%--------------------------------5------Identificar serviços prestados por instituição/cidade/datas/custo--------------------
+%--------------------------------5------Identificar consultas prestadas por instituição/cidade/datas/custo--------------------
 
 % Extensao do predicado servicoInstituicao: Instituicao, Resultado -> {V,F}
 servicoInstituicao(I,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
@@ -195,7 +195,16 @@ instituicoesServicos( ListaInstituicoes ) :-
 	solucoes( Instituicao, servico( _, _, Instituicao, _ ), ListaInstituicoes).
 
 %------------------------------- 6 ---- Identificar os utentes de um serviço/instituição ------------------------------------
+
+% Extenso do predicado utentesServicos : IDServico, Resposta -> {V,F}
+
+utentesServicos( IDS, R ) :- solucoes( ( IDU, Nome, Idade, Cidade ), (consulta( _, IDU, IDS, _ ), utente( IDU, Nome, Idade, Cidade ) ), LR ),
+	eliminarRepetidos( LR, R ).
+
 % Extensao do predicado utentesInstituicao : Instituicao, ListaUtentes -> {V,F}
+
+utentesInstituicao( Instituicao, R ) :- solucoes( ( IDU, Nome, Idade, Cidade ), (servico( IDS, _, Instituicao, _ ), consulta( _, IDU, IDS, _ ), utente( IDU, Nome, Idade, Cidade ) ), LR ),
+	eliminarRepetidos( LR, R ).
 
 %-------------------- 7 ---- Identificar serviços realizados por utente/instituição/cidade; ---------------------------------
 
@@ -213,8 +222,6 @@ servicosInstituicao( Instituicao, R ) :- solucoes( Servico, servico( _, Servico,
 
 servicosCidade( Cidade, R ) :- solucoes( Servico, servico( _, Servico, _, Cidade ), LR ),
 	eliminarRepetidos( LR, R ).
-
-	
 
 %----------- 8 ---- Calcular o custo total dos cuidados de saúde por utente/serviço/instituição/data. -----------------------
 
