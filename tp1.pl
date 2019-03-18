@@ -88,7 +88,7 @@ consulta( '17_10_2014', 19, 9, 20 ).
 consulta( '24_11_2016', 20, 10, 5 ).
 
 
-
+%-----------------------------------------------------------------------------------------------------------------------------
 %----------------------------------- 1 ---- Registar utentes, serviços e consultas -------------------------------------------
 
 % Extensao do predicado registarUtente: idUt, Nome, Idade, Cidade -> {V,F} 
@@ -108,7 +108,8 @@ registarServico( ID, Descricao, Instituicao, Cidade ) :-
 registarConsulta( Data, IDUt, IDServ, Custo ) :- 
 	evolucao( consulta( Data, IDUt, IDServ, Custo ) ).
 
-%----------------------------------- 2 ---- Remover utentes, serviços e consultas -------------------------------------------
+%-----------------------------------------------------------------------------------------------------------------------------
+%----------------------------------- 2 ---- Remover utentes, serviços e consultas --------------------------------------------
 
 % Extensao do predicado removerUtente: idUt, Nome, Idade, Cidade -> {V,F}
 
@@ -126,13 +127,15 @@ removerConsulta( Data, IDUt, IDServ, Custo) :-
 	involucao( consulta( Data, IDUt, IDServ, Custo ) ).
 
 
-%-------------------------- 3 -------Identificar as instituições prestadoras de serviços-------------------------------------
+%-----------------------------------------------------------------------------------------------------------------------------
+%-------------------------- 3 -------Identificar as instituições prestadoras de serviços--------------------------------------
 % Extensão do predicado instServ: Resposta -> {V,F}
 
 instServ(R) :- solucoes((Instituicao),servico( _, _, Instituicao, _ ),G),
 			eliminarRepetidos(G,R).
 
-%-------------------------------------- 4a ------Identificar os utentes por critérios de seleção-----------------------------
+%-----------------------------------------------------------------------------------------------------------------------------
+%-------------------------------------- 4a ------Identificar os utentes por critérios de seleção------------------------------
 
 % Extensao do predicado utenteID: ID, Resultado -> {V,F}
 utenteID(ID,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
@@ -146,7 +149,8 @@ utenteIdade(I,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
 % Extensao do predicado utenteCidade: Cidade, Resultado -> {V,F}
 utenteCidade(C,R) :- solucoes((ID,N,I,C), utente(ID,N,I,C), R).
 
-%-------------------------------------- 4b --------Identificar os serviços por critérios de seleção--------------------------
+%-----------------------------------------------------------------------------------------------------------------------------
+%-------------------------------------- 4b --------Identificar os serviços por critérios de seleção---------------------------
 
 % Extensao do predicado servicoID: ID, Resultado -> {V,F}
 servicoID(ID,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
@@ -160,6 +164,7 @@ servicoInstituicao(I,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
 % Extensao do predicado servicoCidade: Cidade, Resultado -> {V,F}
 servicoCidade(C,R) :- solucoes((ID,D,I,C), servico(ID,D,I,C), R).
 
+%------------------------------------------------------------------------------------------------------------------------------
 %------------------------- 4c ------Identificar as consultas por critérios de seleção------------------------------------------
 
 % Extensao do predicado consultaData: Data , Resultado -> {V,F}
@@ -174,7 +179,7 @@ consultaIDServico(IDS,R) :- solucoes((D,IDU,IDS,C), consulta(D,IDU,IDS,C), R).
 % Extensao do predicado consultaCusto: Custo , Resultado -> {V,F}
 consultaCusto(C,R) :- solucoes((D,IDU,IDS,C), consulta(D,IDU,IDS,C), R).
 
-
+%-----------------------------------------------------------------------------------------------------------------------------
 %--------------------------------5------Identificar consultas prestadas por instituição/cidade/datas/custo--------------------
 
 % Extensao do predicado consultasInstituicao: Instituicao, Resposta -> {V,F}
@@ -193,7 +198,8 @@ consultasData( Data, R ) :- solucoes( (Data, IDU, IDS, Custo ), consulta( Data, 
 
 consultasCusto( Custo, R ) :- solucoes( (Data, IDU, IDS, Custo ), consulta( Data, IDU, IDS, Custo ), R ).
 
-%------------------------------- 6 ---- Identificar os utentes de um serviço/instituição ------------------------------------
+%-----------------------------------------------------------------------------------------------------------------------------
+%------------------------------- 6 ---- Identificar os utentes de um serviço/instituição -------------------------------------
 
 % Extenso do predicado utentesServicos : IDServico, Resposta -> {V,F}
 
@@ -205,7 +211,8 @@ utentesServicos( IDS, R ) :- solucoes( ( IDU, Nome, Idade, Cidade ), (consulta( 
 utentesInstituicao( Instituicao, R ) :- solucoes( ( IDU, Nome, Idade, Cidade ), (servico( IDS, _, Instituicao, _ ), consulta( _, IDU, IDS, _ ), utente( IDU, Nome, Idade, Cidade ) ), LR ),
 	eliminarRepetidos( LR, R ).
 
-%-------------------- 7 ---- Identificar serviços realizados por utente/instituição/cidade; ---------------------------------
+%-----------------------------------------------------------------------------------------------------------------------------
+%-------------------- 7 ---- Identificar serviços realizados por utente/instituição/cidade; ----------------------------------
 
 % Extensao do predicado servicosUtente : IDUtente, Resposta -> {V,F}
 
@@ -222,7 +229,8 @@ servicosInstituicao( Instituicao, R ) :- solucoes( Servico, servico( _, Servico,
 servicosCidade( Cidade, R ) :- solucoes( Servico, servico( _, Servico, _, Cidade ), LR ),
 	eliminarRepetidos( LR, R ).
 
-%----------- 8 ---- Calcular o custo total dos cuidados de saúde por utente/serviço/instituição/data. -----------------------
+%-----------------------------------------------------------------------------------------------------------------------------
+%----------- 8 ---- Calcular o custo total dos cuidados de saúde por utente/serviço/instituição/data. ------------------------
 
 % Extensao do predicado custoUtente : Utente -> {V,F}
 
@@ -248,7 +256,8 @@ custoData( Data ) :- solucoes( Custo, consulta( Data, _, _, Custo), R ),
 	somarLista( R, G ),
 	write('Rendimento total na data '),write(Data),write(' é '),write(G),write('€'),nl.
 
-%----------------------------------------------- Extensao de Meta-Predicados ------------------------------------------------ 
+%-----------------------------------------------------------------------------------------------------------------------------
+%----------------------------------------------- Extensao de Meta-Predicados ------------------------------------------------- 
 
 % Extensao do predicado inserir: Termo -> {V,F}
 
@@ -289,8 +298,6 @@ involucao( T ) :-
 	solucoes( I, -T::I, LI ),
 	teste( LI ),
 	remover( T ).
-	
-	
 
 % Extensao do predicado comprimento : ListaElementos, Resultado -> {V,F}
 
@@ -329,51 +336,53 @@ somarLista( [H|T], R ) :-
 	somarLista( T, N ),
 	R is H+N.
 
-%---------------------------------------------------- Invariantes ---------------------------------------------------------- 
+%-----------------------------------------------------------------------------------------------------------------------------
+%---------------------------------------------------- Invariantes ------------------------------------------------------------ 
 
-%-------------------- Não deixa inserir utentes com o mesmo id. 
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%---------------------------- Não deixa inserir utentes com o mesmo id. 
 
 +utente( IDU, _, _, _ ) :: ( solucoes( IDU, utente( IDU, _, _, _ ), S ),
 							comprimento( S,N ),
 							N == 1 ).
-
-%-------------------- Não deixa inserir serviços com o mesmo id. 
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%--------------------------- Não deixa inserir serviços com o mesmo id. 
 
 +servico( IDS, _, _, _ ) :: ( solucoes( IDS, servico( IDS, _, _, _ ), S ), 
 							comprimento( S, N),
 							N == 1 ).
-
-%-------------------- Não deixa inserir consultas iguais
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%---------------------------------- Não deixa inserir consultas iguais.
 
 +consulta( Data, IDU, IDS, Custo ) :: ( solucoes( ( Data, IDU, IDS, Custo ), consulta( Data, IDU, IDS, Custo ), S),
 										comprimento( S, N ),
 										N == 1 ).
-
-%-------------------- Não deixa remover um utente que não existe
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%-------------------------- Não deixa remover um utente que não existe.
 
 -utente( IDU, Nome, Idade, Cidade ) :: ( solucoes( IDU, utente( IDU, _, _, _ ), S ),
 										comprimento( S, N ),
 										N == 1 ).
-
-%-------------------- Não deixa remover um utente com uma consulta associada a si
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%--------- Não deixa remover um utente com uma consulta associada a si.
 
 -utente( IDU, _, _, _ ) :: ( solucoes( IDU, consulta( _, IDU, _, _ ), S),
 							comprimento( S, N ), 
 							N == 0 ).
-
-%-------------------- Não deixa remover um serviço que não existe
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%------------------------- Não deixa remover um serviço que não existe.
 
 -servico( IDS, Descricao, Instituicao, Cidade ) :: ( solucoes( IDS, servico( IDS, _, _, _ ), S ),
 										comprimento( S, N ),
 										N == 1 ).
-
-%-------------------- Não deixa remover um servico com uma consulta associada a si
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%-------- Não deixa remover um servico com uma consulta associada a si.
 
 -servico( IDS, _, _, _ ) :: ( solucoes( IDS, consulta( _, _, IDS, _ ), S),
 							comprimento( S, N ), 
 							N == 0 ).
-
-%-------------------- Não deixa remover uma consulta que não exista
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%----------------------- Não deixa remover uma consulta que não exista.
 
 -consulta( Data, IDU, IDS, Custo ) :: ( solucoes( ( Data, IDU, IDS, Custo ), consulta( Data, IDU, IDS, Custo ) , S ),
 										comprimento( S, N ),
