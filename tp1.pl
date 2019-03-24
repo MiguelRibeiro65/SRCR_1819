@@ -260,54 +260,46 @@ custoData( Data ) :- solucoes( Custo, consulta( Data, _, _, Custo), R ),
 %----------------------------------------------- Extensao de Meta-Predicados ------------------------------------------------- 
 
 % Extensao do predicado inserir: Termo -> {V,F}
-
 inserir( T ) :-
 	assert( T ).
 inserir( T ) :-
 	retract( T ), !, fail.
 
 % Extensao do predicado remover: Termo -> {V,F}
-
 remover( T ) :-
 	retract( T ).
 remover( T ) :-
 	assert( T ), !, fail.
 
 % Extensao do predicado solucoes: Formato, Questão, ListaSoluções -> {V,F}
-
 solucoes( Formato, Teorema, ListaSolucoes ) :-
 	findall( Formato, Teorema, ListaSolucoes ).	
 
 % Extensao do predicado teste: Termo -> {V,F}
-
 teste( [] ).
 teste( [I|L] ) :-
 	I,
 	teste( L ).
 
 % Extensao do predicado evolucao: Conhecimento -> {V,F}
-
 evolucao( T ) :-
 	solucoes( I, +T::I, LI ),
 	inserir( T ),
 	teste( LI ).
 
 % Extensao do predicado involucao: Conhecimento -> {V,F}
-
 involucao( T ) :-
 	solucoes( I, -T::I, LI ),
 	teste( LI ),
 	remover( T ).
 
 % Extensao do predicado comprimento : ListaElementos, Resultado -> {V,F}
-
 comprimento( [],0 ).
 comprimento( [H|T], N ) :-
 	comprimento( T, X ),
 	N is X+1.
 
 % Extensao do predicado construir: ListaSoluções -> {V,F}
-
 % Extensao do predicado nao: Termo -> {V,F}
 
 nao( T ) :-
@@ -315,7 +307,6 @@ nao( T ) :-
 nao( T ).
 
 % Extensao do predicado eliminarElemento: Elemento, ListaElementos, ListaResultado -> {V,F}
-
 eliminarElemento( _, [], [] ).
 eliminarElemento( E, [E|T1], T2 ) :- eliminarElemento(E, T1, T2 ).
 eliminarElemento( E, [H|T1], [H|T2] ) :-
@@ -323,14 +314,12 @@ eliminarElemento( E, [H|T1], [H|T2] ) :-
 	eliminarElemento( E, T1, T2 ).
 
 % Extensao do predicado eliminarRepetidos: ListaElementos, ListaResultado -> {V,F}
-
 eliminarRepetidos( [], [] ).
 eliminarRepetidos( [H|T], [H|R] ) :-
 	eliminarElemento( H, T, T2 ),
 	eliminarRepetidos( T2, R ).
 
 % Extensao do predicado somarLista : ListaElementos, Resultado -> {V,F}
-
 somarLista( [], 0 ).
 somarLista( [H|T], R ) :-
 	somarLista( T, N ),
