@@ -66,7 +66,7 @@ servico( 13, nefrologia, hospital_beatriz_angelo, loures).
 servico( 14, medicina_dentaria, hospital_egas_moniz, lisboa).
 
 
-%---- Caracterização de consulta : Data, idUt, idMed, idServ, Custo
+%---- Caracterização de consulta : Data, idUt, idMed, idServ, Custo -> {V,F}
 
 consulta( '2017_02_01', 1, 1, 1, 40 ).
 consulta( '2016_01_04', 2, 3, 3, 100 ).
@@ -89,7 +89,7 @@ consulta( '2015_03_19', 18, 3, 11, 55 ).
 consulta( '2014_10_17', 19, 8, 9, 20 ).
 consulta( '2016_11_24', 20, 3, 10, 5 ).
 
-%---- Caracterização de médico: IDM, Nome, Especialidade 
+%---- Caracterização de médico: IDM, Nome, Especialidade -> {V,F}
 
 medico( 1, ricardo, oncologia).
 medico( 2, henrique, cardiologia).
@@ -354,6 +354,8 @@ nServicosInstituicao( Instituicao ) :- solucoes( IDS, servico( IDS, _, Instituic
 %--------- Número de pacientes de um médico -----------------------------
 %------------------------------------------------------------------------
 
+% Extensao do predicado nUtentesMedico : IDMed -> {V,F}
+
 nUtentesMedico( IDM ) :- solucoes( IDU, consulta( _, IDU, IDM, _, _ ), LR ),
 	comprimento( LR, N ),
 	write( 'O médico com o ID ' ),write( IDM ),write( ' possui ' ),write( N ),write( ' paciente(s).'),nl.
@@ -361,6 +363,8 @@ nUtentesMedico( IDM ) :- solucoes( IDU, consulta( _, IDU, IDM, _, _ ), LR ),
 %------------------------------------------------------------------------
 %--------- Número de instituições que um médico  frequentou -------------
 %------------------------------------------------------------------------
+
+% Extensao do predicado nInstituicoesMedico : IDMed -> {V,F}
 
 nInstituicoesMedico( IDM ) :- solucoes( Instituicao, ( consulta( _, _, IDM, IDS, _ ), servico( IDS, _, Instituicao, _ ) ), LR ),
 	eliminarRepetidos( LR, G ),
@@ -370,7 +374,9 @@ nInstituicoesMedico( IDM ) :- solucoes( Instituicao, ( consulta( _, _, IDM, IDS,
 %------------------------------------------------------------------------
 %--------- Rendimento de uma instituição entre duas datas ---------------
 %------------------------------------------------------------------------
-% NAo esta a funcionar
+
+% Extensao do predicado rendimentoInstituicaoEntre : Instituição, Data1, Data2 -> {V,F}
+
 rendimentoInstituicaoEntre( Instituicao, Data1, Data2 ) :- solucoes( Custo, ( servico( IDS, _, Instituicao, _ ), consulta( Data, _, _, IDS, Custo), ( Data1 @=< Data ), ( Data @=< Data2 ) ), R ),
 	somarLista( R, G ),
 	write( 'Rendimento da instituição ' ),write( Instituicao ),write( ' entre ' ),write( Data1 ),write( ' e ' ),write( Data2 ),write( ' é de ' ),write( G ),nl.
