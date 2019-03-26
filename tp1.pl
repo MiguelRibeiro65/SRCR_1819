@@ -239,7 +239,7 @@ consultasCusto( Custo, R ) :- solucoes( (Data, IDU, IDM, IDS, Custo ), consulta(
 
 % Extenso do predicado utentesServicos : Descricao, Resposta -> {V,F}
 
-utentesServicos( Descricao, R ) :- solucoes( ( IDU, Nome, Idade, Cidade ), (consulta( _, IDU, _, IDS, _ ), utente( IDU, Nome, Idade, Cidade ) ), LR ),
+utentesServicos( Descricao, R ) :- solucoes( ( IDU, Nome, Idade, Cidade ), ( servico( IDS, Descricao, _, _), consulta( _, IDU, _, IDS, _ ),  utente( IDU, Nome, Idade, Cidade ) ), LR ),
 	eliminarRepetidos( LR, R ).
 
 % Extensao do predicado utentesInstituicao : Instituicao, ListaUtentes -> {V,F}
@@ -432,8 +432,6 @@ comprimento( [],0 ).
 comprimento( [H|T], N ) :-
 	comprimento( T, X ),
 	N is X+1.
-
-% Extensao do predicado construir: ListaSoluções -> {V,F}
 
 % Extensao do predicado nao: Termo -> {V,F}
 
