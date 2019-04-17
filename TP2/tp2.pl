@@ -71,7 +71,7 @@ nulo( cidade_desconhecida ).
 excecao( utente( 22, luis, 23, coimbra ) ).
 excecao( utente( 22, tiago, 23, coimbra ) ).
 
-% Não sabemos ao certo a idade do utente Joaquina
+% Não sabemos ao certo a idade do utente Joaquina. Sabemos apenas que é entre os 20 e os 30 anos
 
 excecao( utente( 23, joaquina, Idade, vila_real ) ) :- 
 	( Idade >= 20, Idade =< 30 ).
@@ -99,25 +99,20 @@ servico( 14, medicina_dentaria, hospital_egas_moniz, lisboa).
 
 -servico( 50, pediatria, hospital_padre_americo, penafiel ).
 
-% Não se sabe qual foi o servico prestado nu
+% A instituição onde foi prestado um dado serviço não se conhece e não queremos que se saiba
 
-utente( 21, jose, 20, cidade_desconhecida).
-excecao( utente( ID, Nome, Idade, Cidade ) ) :-
-	utente( ID, Nome, Idade, cidade_desconhecida ).
-nulo( cidade_desconhecida ).
-+utente( ID, Nome, Idade, Cidade ) :: ( solucoes( ( ID, Nome, Idade, Cidade ), ( utente( 21, jose, 20, Cidade ), nao( nulo( Cidade ) ) ), R ),
+servico( 15, urologia, instituicao_desconhecida, faro).
+excecao( servico( ID, Descricao, Instituicao, Cidade ) ) :-
+	servico( ID, Descricao, instituicao_desconhecida, faro ).
+nulo( instituicao_desconhecida ).
++servico( ID, Descricao, Instituicao, Cidade ) :: ( solucoes( ( ID, Descricao, Instituicao, Cidade ), ( servico( 15, urologia, Instituicao, faro ), nao( nulo( Instituicao ) ) ), R ),
 	comprimento( R, S ),
 	S == 0 ).
 
-% Não se sabe se o nome do utente com o ID 22 é luis ou tiago
+% Não se sabe se a descricao de um serviço com o ID 30 é pediatria ou nefrologia
 
-excecao( utente( 22, luis, 23, coimbra ) ).
-excecao( utente( 22, tiago, 23, coimbra ) ).
-
-% Não sabemos ao certo a idade do utente Joaquina
-
-excecao( utente( 23, joaquina, Idade, vila_real ) ) :- 
-	( Idade >= 20, Idade =< 30 ).
+excecao( servico( 30, pediatria, hospital_de_braga, braga ) ).
+excecao( servico( 30, nefrologia, hospital_de_braga, braga ) ).
 
 %---- Caracterização de consulta : Data, idUt, idMed, idServ, Custo -> {V,F}
 
@@ -142,6 +137,32 @@ consulta( '2015_03_19', 18, 3, 11, 55 ).
 consulta( '2014_10_17', 19, 8, 9, 20 ).
 consulta( '2016_11_24', 20, 3, 10, 5 ).
 
+-consulta( Data, IDU, IDM, IDS, Custo ) :- 
+	nao( consulta( Data, IDU, IDM, IDS, Custo ) ),
+	nao( excecao( consulta( Data, IDU, IDM, IDS, Custo ) ) ).
+
+-consulta( '2019_12_12', 3, 4, 6, 50000 ).
+
+% A data de uma dada consulta é desconhecida e não queremos que se saiba
+
+consulta( data_desconhecida, 4, 7, 10, 200 ).
+excecao( consulta( Data, IDU, IDM, IDS, Custo ) ) :-
+	consulta( data_desconhecida, IDU, IDM, IDS, Custo ).
+nulo( data_desconhecida ).
++consulta( Data, IDU, IDM, IDS, Custo ) :: ( solucoes( ( Data, IDU, IDM, IDS, Custo ), ( consulta( Data, 4, 7, 10, 200 ), nao( nulo( Data ) ) ), R ),
+	comprimento( R, S ),
+	S == 0 ).
+
+% Não se conhece o número identificativo do utente que participou numa dada consulta
+
+excecao( consulta( '2016-04-16', 1, 2, 3, 300 ) ).
+excecao( consulta( '2016-04-16', 2, 2, 3, 300 ) ).
+
+% Não sabemos ao certo quanto custou uma dada consulta mas podemos afirmar que foi entre os 100€ e os 150€
+
+excecao( consulta( '2018_10_12', 5, 9, 3, Custo ) ) :- 
+	( Custo >= 100, Custo =< 150 ).
+
 %---- Caracterização de médico: IDM, Nome, Especialidade -> {V,F}
 
 medico( 1, ricardo, oncologia).
@@ -155,6 +176,26 @@ medico( 8, daniel, cirurgia_geral).
 medico( 9, daniela, cardiologia).
 medico( 10, francisca, oncologia).
 
+-medico( ID, Nome, Especialidade ) :- 
+	nao( medico( ID, Nome, Especialidade ) ),
+	nao( excecao( medico( ID, Nome, Especialidade ) ) ).
+
+-medico( 30, rui, cardiologia ).
+
+% A especialidade de um dado medico não se conhece mas tmbém não queremos que se saiba
+
+medico( 11, dinis, especialidade_desconhecida ).
+excecao( medico( ID, Nome, Especialidade ) ) :-
+	medico( ID, Nome, especialidade_desconhecida ).
+nulo( especialidade_desconhecida ).
++medico( ID, Nome, Especialidade ) :: ( solucoes( ( ID, Nome, Especialidade ), ( medico( 11, dinis, Especialidade ), nao( nulo( Especialidade ) ) ), R ),
+	comprimento( R, S ),
+	S == 0 ).
+
+% Não se conhece o nome de um dado medico
+
+excecao( medico( 12, joel, cirurgia_geral ) ).
+excecao( medico( 12, joao, cirurgia_geral ) ).
 
 %-----------------------------------------------------------------------------------------------------------------------------
 %----------------------------------------------- Extensão de Meta-Predicados -------------------------------------------------
